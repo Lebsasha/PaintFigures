@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CLionExternalBuildManager">
+    <target id="91ce295b-15c5-4e59-9776-bd397ff2ce72" name="makeBuildTarget" defaultType="MAKE">
+      <configuration id="666621cd-1077-4614-b02e-0e4649da18a7" name="makeBuildTarget">
+        <build type="MAKE">
+          <make targetName="first" />
+        </build>
+        <clean type="MAKE">
+          <make targetName="clean" />
+        </clean>
+      </configuration>
+    </target>
+    <target id="8099ae26-3461-4891-8667-fa2dfdb79df8" name="toolBuildTarget" defaultType="TOOL">
+      <configuration id="0b9a9e3c-ccf4-45d9-8fdd-865d8f2f2123" name="toolBuildTarget">
+        <build type="TOOL">
+          <tool actionId="Tool_External Tools_make clean" />
+        </build>
+        <clean type="TOOL">
+          <tool actionId="Tool_External Tools_make clean" />
+        </clean>
+      </configuration>
+    </target>
+    <target id="ca2fe447-f89f-40c9-9e0d-244c0c8b39ea" name="tempUnusedBuildTarget" defaultType="TOOL">
+      <configuration id="475b9d23-188f-455b-9a2a-cbb662f01d93" name="tempUnusedBuildTarget">
+        <build type="TOOL">
+          <tool actionId="Tool_External Tools_make clean" />
+        </build>
+        <clean type="TOOL">
+          <tool actionId="Tool_External Tools_make clean" />
+        </clean>
+      </configuration>
+    </target>
+  </component>
+</project>
