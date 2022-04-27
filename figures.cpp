@@ -87,3 +87,22 @@ void Line::saveToFile(std::ostream& oStr)
 {
 
 }
+
+std::pair<QPoint, QPoint> Line::getPoints()
+{
+    return {first, second};
+}
+
+void Line::movePoint(const QPoint& p, const QSize& vector)
+{
+    if (p == first)
+    {
+        first.setX(p.x() + vector.width());
+        first.setY(p.y() + vector.height());
+    }
+    else if (p == second)
+    {
+        second.setX(p.x() + vector.width());
+        second.setY(p.y() + vector.height());
+    }
+}

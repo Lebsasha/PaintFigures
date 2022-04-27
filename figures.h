@@ -61,6 +61,8 @@ public:
     void draw(QPainter& painter) override;
 
     void saveToFile(std::ostream& oStr) override;
+    void movePoint(const QPoint& p, const QSize& vector);
+    std::pair<QPoint, QPoint> getPoints();
 };
 enum class State{Idle, DrawingNewFigure, MoveFigure};
 enum class FigureType{None, Rectangle, Ellipse, Triangle, Line};

@@ -62,7 +62,7 @@ void Painter::paintEvent(QPaintEvent* )
     std::cout<<__PRETTY_FUNCTION__ <<std::endl;
     QPainter painter(this);
 
-    for (const auto &item : figures)
+    for (const auto &item: figures)
     {
         item->draw(painter);
     }
@@ -94,7 +94,11 @@ void Painter::mousePressEvent(QMouseEvent* event)
                 if (pFigure != nullptr)
                     figure = new Line(pFigure->getCenter());
                 else
-                    return; ///Let's try draw line again
+                {
+                    creatingFigureType = FigureType::None;
+                    setState(State::Idle);
+                    return;
+                }
             }
                 break;
         }
@@ -119,7 +123,7 @@ void Painter::mouseReleaseEvent(QMouseEvent* event)
             {
                 figures.pop_back();
                 repaint();
-                return;
+                return; ///Let's try draw line again
             }
         }
         setState(State::Idle);
@@ -149,7 +153,21 @@ void Painter::mouseMoveEvent(QMouseEvent* event)
         {
             int deltaX = event->x() - figureMoveHandler.initialPos.x();
             int deltaY = event->y() - figureMoveHandler.initialPos.y();
-            figureMoveHandler.movingFigure->move(QSize(deltaX, deltaY));
+            QSize movingVector = {deltaX, deltaY};
+            for (const auto& item: figures)
+            {
+                Line* line = dynamic_cast<Line*>(item);
+                if (line != nullptr)
+                {
+                    const auto& linePoints = line->getPoints();
+                    const QPoint& center = figureMoveHandler.movingFigure->getCenter();
+                    if (center == linePoints.first)
+                        line->movePoint(linePoints.first, movingVector);
+                    else if (center == linePoints.second)
+                        line->movePoint(linePoints.second, movingVector);
+                }
+            }
+            figureMoveHandler.movingFigure->move(movingVector);
             figureMoveHandler.initialPos = event->pos();
         }
 
