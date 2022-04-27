@@ -4,8 +4,12 @@
   <component name="MakefileSettings">
     <option name="linkedExternalProjectsSettings">
       <MakefileProjectSettings>
-        <option name="cleanTarget" value="first" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/Debug" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/Debug" />
+          </set>
+        </option>
         <option name="version" value="2" />
       </MakefileProjectSettings>
     </option>

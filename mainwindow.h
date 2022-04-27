@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "painter.h"
 #include <QMainWindow>
 
 namespace Ui {
@@ -13,10 +14,11 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    ~MainWindow() override;
 
 private:
     Ui::MainWindow *ui;
+    Painter* painter;
 };
 
 #endif // MAINWINDOW_H

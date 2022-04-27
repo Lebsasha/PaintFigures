@@ -27,11 +27,13 @@ CONFIG += c++14
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-#    figures.cpp
+    figures.cpp \
+    painter.cpp
 
 HEADERS += \
         mainwindow.h \
-#    figures.h
+    figures.h \
+    painter.h
 
 FORMS += \
         mainwindow.ui
