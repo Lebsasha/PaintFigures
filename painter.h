@@ -26,6 +26,7 @@ protected:
     Figure* currFigureUnderMousePointer(const QPoint& pos);
 
 public:
+    FigureType creatingFigureType;
 
 private:
     State state = State::Idle;

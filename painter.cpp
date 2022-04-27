@@ -9,6 +9,7 @@ Painter::Painter(QWidget *parent, QLabel& state_label) : QWidget(parent), state(
     pal.setColor(backgroundRole(), Qt::white);
     setPalette(pal);
     setAutoFillBackground(true);
+    creatingFigureType = FigureType::None;
     figureMoveHandler = {nullptr, QPoint(0, 0)};
     setState(State::Idle);
 }
@@ -21,18 +22,30 @@ void Painter::setState(State newState)
         case State::Idle:
             stateLabel.setText("");
             break;
-        case State::DrawRectangle:
-            stateLabel.setText("Drawaing rectangle");
+        case State::DrawingNewFigure:
+        {
+            std::string s = "Drawing ";
+            switch (creatingFigureType)
+            {
+                case FigureType::Rectangle:
+                    s.append("rectangle");
+                    break;
+                case FigureType::Ellipse:
+                    s.append("ellipse");
+                    break;
+                case FigureType::Triangle:
+                    s.append("triangle");
+                    break;
+                case FigureType::Line:
+                    s.append("line");
+                    break;
+                case FigureType::None:
+                    s = "Error occurred while creating figure";
+                    break;
+            }
+            stateLabel.setText(QString(s.c_str()));
             break;
-        case State::DrawEllipse:
-            stateLabel.setText("Drawing ellipse");
-            break;
-        case State::DrawTriangle:
-            stateLabel.setText("Drawing triangle");
-            break;
-        case State::DrawLine:
-            stateLabel.setText("Drawing line");
-            break;
+        }
         case State::MoveFigure:
             stateLabel.setText("Moving figures");
             break;
@@ -58,11 +71,29 @@ void Painter::paintEvent(QPaintEvent* )
 void Painter::mousePressEvent(QMouseEvent* event)
 {
     std::cout<<__PRETTY_FUNCTION__ <<std::endl;
-    if (state == State::DrawRectangle)
+    if (state == State::DrawingNewFigure)
     {
-        figures.push_back(new Rectangle(event->pos()));//TODO destructor
+        Figure* figure;
+        switch (creatingFigureType)
+        {
+            case FigureType::None:
+                figure = nullptr;
+                break;
+            case FigureType::Rectangle:
+                figure = new Rectangle(event->pos());
+                break;
+            case FigureType::Ellipse:
+                figure = new Ellipse(event->pos());
+                break;
+            case FigureType::Triangle:
+                figure = new Triangle(event->pos());
+                break;
+            case FigureType::Line:
+                break;
+        }
+        figures.push_back(figure);
     }
-    if (state == State::MoveFigure)
+    else if (state == State::MoveFigure)
     {
         figureMoveHandler.movingFigure = currFigureUnderMousePointer(event->pos());
         figureMoveHandler.initialPos = event->pos();
@@ -72,7 +103,7 @@ void Painter::mousePressEvent(QMouseEvent* event)
 void Painter::mouseReleaseEvent(QMouseEvent* event)
 {
     std::cout<<__PRETTY_FUNCTION__ <<std::endl;
-    if (state != State::Idle && state != State::MoveFigure)
+    if (state == State::DrawingNewFigure)
     {
         setState(State::Idle);
     }
@@ -83,11 +114,11 @@ void Painter::mouseMoveEvent(QMouseEvent* event)
 //    std::cout<< __PRETTY_FUNCTION__ <<std::endl;
     if (event->buttons() == Qt::LeftButton)
     {
-        if (state == State::DrawRectangle)
+        if (state == State::DrawingNewFigure)
         {
             (*figures.rbegin())->resize(event->pos());
         }
-        else if(state == State::MoveFigure)
+        else if(state == State::MoveFigure && figureMoveHandler.movingFigure != nullptr)
         {
             int deltaX = event->x() - figureMoveHandler.initialPos.x();
             int deltaY = event->y() - figureMoveHandler.initialPos.y();
@@ -95,7 +126,7 @@ void Painter::mouseMoveEvent(QMouseEvent* event)
             figureMoveHandler.initialPos = event->pos();
         }
 
-        if(state != State::Idle)
+        if(state == State::DrawingNewFigure || state == State::MoveFigure)
             repaint();
     }
 }

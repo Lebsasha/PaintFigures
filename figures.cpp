@@ -1,7 +1,30 @@
 #include "figures.h"
 #include <QPainter>
 
-Rectangle::Rectangle(const QPoint& initial): first(initial), second(initial)
+Figure::Figure(const QPoint& initial): first(initial), second(initial)
+{}
+
+void Figure::resize(const QPoint& _second)
+{
+    second = _second;
+}
+
+void Figure::move(const QSize& vect)
+{
+    first.setX(first.x() + vect.width());
+    first.setY(first.y() + vect.height());
+    second.setX(second.x() + vect.width());
+    second.setY(second.y() + vect.height());
+}
+
+std::pair<QPoint, QPoint> Figure::boundPoints()
+{
+    auto upLeft = QPoint(std::min(first.x(), second.x()), std::min(first.y(), second.y()));
+    auto dnRight = QPoint(std::max(first.x(), second.x()), std::max(first.y(), second.y()));
+    return {upLeft, dnRight};
+}
+
+Rectangle::Rectangle(const QPoint& initial): Figure(initial)
 {}
 
 void Rectangle::draw(QPainter& painter)
@@ -11,27 +34,38 @@ void Rectangle::draw(QPainter& painter)
     painter.drawRect(first.x(), first.y(), w, h);
 }
 
-void Rectangle::resize(const QPoint& _second)
-{
-    second = _second;
-}
-
-void Rectangle::move(const QSize& vect)
-{
-    first.setX(first.x() + vect.width());
-    first.setY(first.y() + vect.height());
-    second.setX(second.x() + vect.width());
-    second.setY(second.y() + vect.height());
-}
-
 void Rectangle::saveToFile(std::ostream& oStr)
 {
 
 }
 
-std::pair<QPoint, QPoint> Rectangle::boundPoints()
+Ellipse::Ellipse(const QPoint& initial): Figure(initial)
+{}
+
+void Ellipse::draw(QPainter& painter)
 {
-    auto upLeft = QPoint(std::min(first.x(), second.x()), std::min(first.y(), second.y()));
-    auto dnRight = QPoint(std::max(first.x(), second.x()), std::max(first.y(), second.y()));
-    return {upLeft, dnRight};
+    QPoint center = (first + second)/2;
+    int rx = second.x() - first.x();
+    int ry = second.y() - first.y();
+    painter.drawEllipse(center, rx, ry);
+}
+
+void Ellipse::saveToFile(std::ostream& oStr)
+{
+
+}
+
+Triangle::Triangle(const QPoint& initial) : Figure(initial)
+{}
+
+void Triangle::draw(QPainter& painter)
+{
+    painter.drawLine(second.x(), second.y(), first.x(), second.y());
+    painter.drawLine(first.x(), second.y(), (first.x() + second.x())/2, first.y());
+    painter.drawLine((first.x() + second.x())/2, first.y(), second.x(), second.y());
+}
+
+void Triangle::saveToFile(std::ostream& oStr)
+{
+
 }

@@ -10,48 +10,48 @@ class Figure
 {
 public:
     virtual void draw(QPainter& painter) = 0;
-    virtual void resize(const QPoint& point) =0;
-    virtual void move(const QSize& vect)=0;
+    virtual void resize(const QPoint& _second);
+    virtual void move(const QSize& vect);
     virtual void saveToFile(std::ostream& oStr) =0;
     /// first point must be upper left and second is lower right bound points of figure
-    virtual std::pair<QPoint, QPoint> boundPoints() = 0;
+    virtual std::pair<QPoint, QPoint> boundPoints();
     virtual ~Figure() = default;
 protected:
-    Figure() = default;
+    explicit Figure(const QPoint& initial);
+
+protected:
+    QPoint first;
+    QPoint second;
 private:
     //points UpLeftPoint (begin), DnRightPoint (end)
 };
 
 class Rectangle: public Figure
 {
-    QPoint first;
-    QPoint second;
 public:
     explicit Rectangle(const QPoint& initial);
     void draw(QPainter& painter) override;
 
-    void resize(const QPoint& second) override;
-    void move(const QSize& vect) override;
     void saveToFile(std::ostream& oStr) override;
-
-    std::pair<QPoint, QPoint> boundPoints() override;
 };
 
-//class Ellipse: public Figure
-//{
-//public:
-//    Ellipse(/*Points*/);
-//    void draw() override;
-//    void saveToFile(std::ostream& oStr) override;
-//};
-//
-//class Triangle: public Figure
-//{
-//public:
-//    Triangle(/*Points*/);
-//    void draw() override;
-//    void saveToFile(std::ostream& oStr) override;
-//};
+class Ellipse: public Figure
+{
+public:
+    explicit Ellipse(const QPoint& initial);
+    void draw(QPainter& painter) override;
+
+    void saveToFile(std::ostream& oStr) override;
+};
+
+class Triangle: public Figure
+{
+public:
+    explicit Triangle(const QPoint& initial);
+    void draw(QPainter& painter) override;
+
+    void saveToFile(std::ostream& oStr) override;
+};
 //
 //class Line: public Figure
 //{
@@ -59,5 +59,6 @@ public:
 //    Line(/*Points*/);
 //    void draw() override;
 //};
-enum class State{Idle, DrawRectangle, DrawEllipse, DrawTriangle, DrawLine, MoveFigure};
+enum class State{Idle, DrawingNewFigure, MoveFigure};
+enum class FigureType{None, Rectangle, Ellipse, Triangle, Line};
 #endif // FIGURES
