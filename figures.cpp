@@ -1,6 +1,5 @@
 #include "figures.h"
 #include <QPainter>
-#include <cmath>
 
 Rectangle::Rectangle(const QPoint& initial): first(initial), second(initial)
 {}

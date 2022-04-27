@@ -2,7 +2,7 @@
 #include <QPainter>
 #include <QMouseEvent>
 
-Painter::Painter(QWidget *parent) : QWidget(parent), state(State::Idle), figures()
+Painter::Painter(QWidget *parent, QLabel& state_label) : QWidget(parent), state(State::Idle), stateLabel(state_label), figures()
 {
     setMouseTracking(true);
     QPalette pal = palette();
@@ -10,6 +10,38 @@ Painter::Painter(QWidget *parent) : QWidget(parent), state(State::Idle), figures
     setPalette(pal);
     setAutoFillBackground(true);
     figureMoveHandler = {nullptr, QPoint(0, 0)};
+    setState(State::Idle);
+}
+
+void Painter::setState(State newState)
+{
+    state = newState;
+    switch (newState)
+    {
+        case State::Idle:
+            stateLabel.setText("");
+            break;
+        case State::DrawRectangle:
+            stateLabel.setText("Drawaing rectangle");
+            break;
+        case State::DrawEllipse:
+            stateLabel.setText("Drawing ellipse");
+            break;
+        case State::DrawTriangle:
+            stateLabel.setText("Drawing triangle");
+            break;
+        case State::DrawLine:
+            stateLabel.setText("Drawing line");
+            break;
+        case State::MoveFigure:
+            stateLabel.setText("Moving figures");
+            break;
+    }
+}
+
+State Painter::getState()
+{
+    return state;
 }
 
 void Painter::paintEvent(QPaintEvent* )
@@ -41,7 +73,9 @@ void Painter::mouseReleaseEvent(QMouseEvent* event)
 {
     std::cout<<__PRETTY_FUNCTION__ <<std::endl;
     if (state != State::Idle && state != State::MoveFigure)
-        state = State::Idle;
+    {
+        setState(State::Idle);
+    }
 }
 
 void Painter::mouseMoveEvent(QMouseEvent* event)

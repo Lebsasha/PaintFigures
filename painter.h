@@ -4,12 +4,15 @@
 #include "figures.h"
 #include <vector>
 #include <QWidget>
+#include <QLabel>
 
 class Painter : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Painter(QWidget *parent = nullptr);
+    explicit Painter(QWidget *parent, QLabel& state_label);
+    void setState(State newState);
+    State getState();
     ~Painter() override;
 
 protected:
@@ -23,9 +26,11 @@ protected:
     Figure* currFigureUnderMousePointer(const QPoint& pos);
 
 public:
-    State state = State::Idle;
 
 private:
+    State state = State::Idle;
+    QLabel& stateLabel;
+
     std::vector<Figure*> figures;
 
     struct FigureMoveHandler
@@ -34,8 +39,6 @@ private:
         QPoint initialPos;
     };
     FigureMoveHandler figureMoveHandler;
-
-
 
 signals:
 
