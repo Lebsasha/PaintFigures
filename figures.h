@@ -12,6 +12,7 @@ public:
     virtual void draw(QPainter& painter) = 0;
     virtual void resize(const QPoint& _second);
     virtual void move(const QSize& vect);
+    virtual QPoint getCenter() const;
     virtual void saveToFile(std::ostream& oStr) =0;
     /// first point must be upper left and second is lower right bound points of figure
     virtual std::pair<QPoint, QPoint> boundPoints();
@@ -52,13 +53,15 @@ public:
 
     void saveToFile(std::ostream& oStr) override;
 };
-//
-//class Line: public Figure
-//{
-//public:
-//    Line(/*Points*/);
-//    void draw() override;
-//};
+
+class Line: public Figure
+{
+public:
+    explicit Line(const QPoint& initial);
+    void draw(QPainter& painter) override;
+
+    void saveToFile(std::ostream& oStr) override;
+};
 enum class State{Idle, DrawingNewFigure, MoveFigure};
 enum class FigureType{None, Rectangle, Ellipse, Triangle, Line};
 #endif // FIGURES

@@ -24,6 +24,11 @@ std::pair<QPoint, QPoint> Figure::boundPoints()
     return {upLeft, dnRight};
 }
 
+QPoint Figure::getCenter() const
+{
+    return (first + second)/2;
+}
+
 Rectangle::Rectangle(const QPoint& initial): Figure(initial)
 {}
 
@@ -45,8 +50,8 @@ Ellipse::Ellipse(const QPoint& initial): Figure(initial)
 void Ellipse::draw(QPainter& painter)
 {
     QPoint center = (first + second)/2;
-    int rx = second.x() - first.x();
-    int ry = second.y() - first.y();
+    int rx = (second.x() - first.x())/2;
+    int ry = (second.y() - first.y())/2;
     painter.drawEllipse(center, rx, ry);
 }
 
@@ -66,6 +71,19 @@ void Triangle::draw(QPainter& painter)
 }
 
 void Triangle::saveToFile(std::ostream& oStr)
+{
+
+}
+
+Line::Line(const QPoint& initial) : Figure(initial)
+{}
+
+void Line::draw(QPainter& painter)
+{
+    painter.drawLine(first, second);
+}
+
+void Line::saveToFile(std::ostream& oStr)
 {
 
 }

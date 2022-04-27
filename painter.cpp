@@ -89,6 +89,13 @@ void Painter::mousePressEvent(QMouseEvent* event)
                 figure = new Triangle(event->pos());
                 break;
             case FigureType::Line:
+            {
+                Figure* pFigure = currFigureUnderMousePointer(event->pos());
+                if (pFigure != nullptr)
+                    figure = new Line(pFigure->getCenter());
+                else
+                    return; ///Let's try draw line again
+            }
                 break;
         }
         figures.push_back(figure);
@@ -105,7 +112,18 @@ void Painter::mouseReleaseEvent(QMouseEvent* event)
     std::cout<<__PRETTY_FUNCTION__ <<std::endl;
     if (state == State::DrawingNewFigure)
     {
+        if (creatingFigureType == FigureType::Line)
+        {
+            auto figure = currFigureUnderMousePointer(event->pos());
+            if (figure == nullptr)
+            {
+                figures.pop_back();
+                repaint();
+                return;
+            }
+        }
         setState(State::Idle);
+        creatingFigureType = FigureType::None;
     }
 }
 
@@ -116,7 +134,16 @@ void Painter::mouseMoveEvent(QMouseEvent* event)
     {
         if (state == State::DrawingNewFigure)
         {
-            (*figures.rbegin())->resize(event->pos());
+            if (creatingFigureType != FigureType::Line)
+                (*figures.rbegin())->resize(event->pos());
+            else
+            {
+                auto figure = currFigureUnderMousePointer(event->pos());
+                if (figure == nullptr)
+                   (*figures.rbegin())->resize(event->pos());
+                else
+                   (*figures.rbegin())->resize(figure->getCenter());
+            }
         }
         else if(state == State::MoveFigure && figureMoveHandler.movingFigure != nullptr)
         {
@@ -147,8 +174,8 @@ Figure* Painter::currFigureUnderMousePointer(const QPoint& pos)
     {
         const std::pair<QPoint, QPoint>& boundPoints = item->boundPoints();
         if (pos.x() >= boundPoints.first.x() && pos.x() <= boundPoints.second.x() &&
-            pos.y() >= boundPoints.first.y() && pos.y() <= boundPoints.second.y()
-            /*dynamic_cast<Line*>(item) != nullptr*/)
+            pos.y() >= boundPoints.first.y() && pos.y() <= boundPoints.second.y() &&
+            dynamic_cast<Line*>(item) == nullptr)
             return item;
     }
     return nullptr;
