@@ -10,6 +10,7 @@ class Painter : public QWidget
     Q_OBJECT
 public:
     explicit Painter(QWidget *parent = nullptr);
+    ~Painter() override;
 
 protected:
     void paintEvent(QPaintEvent* event) override;
@@ -19,11 +20,20 @@ protected:
     void resizeEvent(QResizeEvent* event) override;
     void closeEvent(QCloseEvent* event) override;
 
-    const Figure* currFigureUnderMousePointer(const QPoint& pos);
+    Figure* currFigureUnderMousePointer(const QPoint& pos);
 
 public:
-    std::vector<Figure*> figures;
     State state = State::Idle;
+
+private:
+    std::vector<Figure*> figures;
+
+    struct FigureMoveHandler
+    {
+        Figure* movingFigure;
+        QPoint initialPos;
+    };
+    FigureMoveHandler figureMoveHandler;
 
 
 

@@ -17,9 +17,12 @@ void Rectangle::resize(const QPoint& _second)
     second = _second;
 }
 
-void Rectangle::move()
+void Rectangle::move(const QSize& vect)
 {
-
+    first.setX(first.x() + vect.width());
+    first.setY(first.y() + vect.height());
+    second.setX(second.x() + vect.width());
+    second.setY(second.y() + vect.height());
 }
 
 void Rectangle::saveToFile(std::ostream& oStr)
@@ -29,19 +32,7 @@ void Rectangle::saveToFile(std::ostream& oStr)
 
 std::pair<QPoint, QPoint> Rectangle::boundPoints()
 {
-
     auto upLeft = QPoint(std::min(first.x(), second.x()), std::min(first.y(), second.y()));
     auto dnRight = QPoint(std::max(first.x(), second.x()), std::max(first.y(), second.y()));
     return {upLeft, dnRight};
-//    if (first.x() < second.x())
-//        if (first.y() < second.y())
-//            return {first, second};
-//        else
-//        {
-//            auto upLeft = QPoint(first.x(), second.y());
-//            auto dnRight = QPoint(second.x(), first.y());
-//            return {upLeft, dnRight};
-//        }
-//    else
-//        if (first.y())
 }

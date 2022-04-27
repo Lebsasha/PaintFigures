@@ -13,7 +13,13 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(ui->bDrawTriangle, (&QPushButton::clicked), this, ([=]() {this->painter->state = State::DrawTriangle;}));
     QObject::connect(ui->bDrawEllipse, (&QPushButton::clicked), this, ([=]() {this->painter->state = State::DrawEllipse;}));
     QObject::connect(ui->bDrawLine, (&QPushButton::clicked), this, ([=]() {this->painter->state = State::DrawLine;}));
-    QObject::connect(ui->bMoveFigures, (&QPushButton::clicked), this, ([=]() {this->painter->state = State::MoveFigure;}));
+    QObject::connect(ui->bMoveFigures, (&QPushButton::clicked), this, ([=]()
+    {
+        if (painter->state != State::MoveFigure)
+            painter->state = State::MoveFigure;
+        else
+            painter->state = State::Idle;
+    }));
 
 }
 

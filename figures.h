@@ -11,7 +11,7 @@ class Figure
 public:
     virtual void draw(QPainter& painter) = 0;
     virtual void resize(const QPoint& point) =0;
-    virtual void move(/**/) =0;
+    virtual void move(const QSize& vect)=0;
     virtual void saveToFile(std::ostream& oStr) =0;
     /// first point must be upper left and second is lower right bound points of figure
     virtual std::pair<QPoint, QPoint> boundPoints() = 0;
@@ -31,7 +31,7 @@ public:
     void draw(QPainter& painter) override;
 
     void resize(const QPoint& second) override;
-    void move() override;
+    void move(const QSize& vect) override;
     void saveToFile(std::ostream& oStr) override;
 
     std::pair<QPoint, QPoint> boundPoints() override;
